@@ -3,10 +3,12 @@ import java.util.ArrayList;
 public class Client {
     private double x;
     private double y;
+    private Node clientNode;
 
     public Client(double x, double y) {
         this.x = x;
         this.y = y;
+        this.clientNode = null;
     }
 
     public Client(ArrayList<String> arr) {
@@ -20,5 +22,13 @@ public class Client {
     
     public double getY(){
         return this.y;
+    }
+
+    public Node getClientNode(){
+        return this.clientNode;
+    }
+
+    public void setClientNode(Node n){
+        this.clientNode = n;
     }
 }

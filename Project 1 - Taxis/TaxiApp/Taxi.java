@@ -4,6 +4,7 @@ public class Taxi {
     private double x;
     private double y;
     private int id;
+    private Node taxiNode;
 
     public Taxi(double x, double y, int id) {
         this.x = x;
@@ -27,5 +28,13 @@ public class Taxi {
 
     public int getId(){
         return this.id;
+    }
+
+    public Node getTaxiNode(){
+        return this.taxiNode;
+    }
+
+    public void setTaxiNode(Node n){
+        this.taxiNode = n;
     }
 }
