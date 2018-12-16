@@ -40,6 +40,7 @@ public class TaxiApp {
         scanner.nextLine();
         MapNode prevMapNode = null;
         MapNode currMapNode = null;
+        
         while(scanner.hasNext()){
             String line = scanner.nextLine();
             ArrayList<String> values = new ArrayList<String>(Arrays.asList(line.split(",")));
@@ -76,7 +77,7 @@ public class TaxiApp {
                     }
                 }
             }
-            prevMapNode = currMapNode;
+            prevMapNode = map.get(key);
         }      
         scanner.close();
         return;
