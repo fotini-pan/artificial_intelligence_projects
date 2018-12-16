@@ -13,7 +13,7 @@ public class TaxiApp {
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
     private static ArrayList<MapNode> closed = new ArrayList<>();
-    private static ArrayList<Path> paths = new ArrayList<>();
+    //private static ArrayList<Path> paths = new ArrayList<>();
 
     /*
         The 3 below methods are used to read the input data.
@@ -188,8 +188,8 @@ public class TaxiApp {
                 double x2 = m.getX();
                 double y2 = m.getY();
                 double oldG = m.getG();
-                double newG = current.getG() + distance;
                 double distance = calculateDistance(x1, x2, y1, y2);
+                double newG = current.getG() + distance;
                 if (oldG == 0) {
                     m.setG(newG);
                     m.addParent(current);
