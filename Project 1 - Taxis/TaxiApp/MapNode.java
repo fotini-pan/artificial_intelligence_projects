@@ -3,22 +3,30 @@ import java.util.ArrayList;
 public class MapNode {
     private double x;
     private double y;
+    private double h;
+    private double g;
     private ArrayList<Node> refNodes;
     private ArrayList<MapNode> canGoNodes;
+    private ArrayList<MapNode> parents;
 
     public MapNode(double x, double y){
         this.x = x;
         this.y = y;
+        this.g = 0;
+        this.h = 0;
         this.refNodes = new ArrayList<>();
         this.canGoNodes = new ArrayList<>();
-
+        this.parents = new ArrayList<>();
     }
 
     public MapNode(ArrayList<String> arr){
         this.x = Double.parseDouble(arr.get(0));
         this.y = Double.parseDouble(arr.get(1));
+        this.g = 0;
+        this.h = 0;
         this.refNodes = new ArrayList<>();
         this.canGoNodes = new ArrayList<>();
+        this.parents = new ArrayList<>();
     }
 
     public double getX(){
@@ -37,12 +45,25 @@ public class MapNode {
         return this.canGoNodes;
     }
 
+    public ArrayList<MapNode> getParents(){
+        return this.parents;
+    }
+
     public void addRefNode(Node n){
         this.refNodes.add(n);
     }
 
     public void addCanGoNode(MapNode m){
         this.canGoNodes.add(m);
+    }
+
+    public void addParent(MapNode m){
+        this.parents.add(m);
+    }
+
+    public void clearAndAddParent(MapNode m){
+        this.parents.clear();
+        this.parents.add(m);
     }
 
     public Node getRefNodeById(int id){
@@ -52,5 +73,25 @@ public class MapNode {
             }
         }
         return null;
+    }
+
+    public double getH(){
+        return this.h;
+    }
+
+    public void setH(double hvalue){
+        this.h = hvalue;
+    }
+
+    public double getG(){
+        return this.g;
+    }
+
+    public void setG(double g){
+        this.g = g;
+    }
+
+    public double getF(){
+        return (this.g + this.h);
     }
 }

@@ -5,7 +5,6 @@ public class Node {
     private double y;
     private int id;
     private String name;
-    private double hvalue;
 
     public Node(double x, double y, int id, String name) {
         this.x = x;
@@ -41,13 +40,5 @@ public class Node {
 
     public String getName(){
         return this.name;
-    }
-
-    public double getHValue(){
-        return this.hvalue;
-    }
-
-    public void setHValue(double hvalue){
-        this.hvalue = hvalue;
     }
 }

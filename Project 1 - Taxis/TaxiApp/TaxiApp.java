@@ -11,10 +11,13 @@ public class TaxiApp {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
+    private static ArrayList<MapNode> open = new ArrayList<>();
+    private static ArrayList<MapNode> closed = new ArrayList<>();
+    private static ArrayList<Path> paths = new ArrayList<>();
 
     /*
         The 3 below methods are used to read the input data.
-        readNotes() also produces the graph of the nodes
+        readNodes() also produces the graph of the nodes
     */
 
     public static void readTaxis() throws FileNotFoundException{
@@ -42,12 +45,18 @@ public class TaxiApp {
             ArrayList<String> values = new ArrayList<String>(Arrays.asList(line.split(",")));
             Node n = new Node(values);
             nodes.add(n);
+            double x1 = clients.get(0).getClientNode().getX();
+            double y1 = clients.get(0).getClientNode().getY();
+            double x2 = node.getX();
+            double y2 = node.getY();
+            double distance = calculateDistance(x1, x2, y1, y2);
             String key = values.get(0) + values.get(1);
             currMapNode = map.get(key);
             if(currMapNode == null){
                 MapNode newMapNode = new MapNode(values); 
                 map.put(key, newMapNode);
                 newMapNode.addRefNode(n);
+                newMapNode.setH(distance);
                 if(prevMapNode != null){
                     Node tempNode = prevMapNode.getRefNodeById(n.getId());
                     if(tempNode != null){
@@ -58,6 +67,7 @@ public class TaxiApp {
             }
             else{
                 currMapNode.addRefNode(n);
+                currMapNode.setH(distance);
                 if(prevMapNode != null){
                     Node tempNode = prevMapNode.getRefNodeById(n.getId());
                     if(tempNode != null){
@@ -171,6 +181,37 @@ public class TaxiApp {
         return distance;
     }
 
+    public static void aStarSearch(MapNode S, MapNode G){
+        open.add(S);
+        while (!open.isEmpty()) {
+            MapNode current = open.remove(0);
+            closed.add(current);
+            double x1 = current.getX();
+            double y1 = current.getY();
+            ArrayList<MapNode> children = current.getCanGoNodes();
+            for (MapNode m: children) {
+                double x2 = m.getX();
+                double y2 = m.getY();
+                double oldG = m.getG();
+                double newG = current.getG() + distance;
+                double distance = calculateDistance(x1, x2, y1, y2);
+                if (oldG == 0) {
+                    m.setG(newG);
+                    m.addParent(current);
+                }
+                else if (oldG > newG) {
+                    m.setG(newG);
+                    m.clearAndAddParent(current);
+                }
+                else if (oldG == newG) {
+                    m.addParent(current);
+                }
+                if (!open.contains(m)) {
+                    open.add(m);
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
@@ -178,6 +219,7 @@ public class TaxiApp {
         readClients();
         findNodeOfClient();
         findNodeOfTaxi();
+        /*
         makeHeuristicValues();
         for(String key : map.keySet()){
             MapNode m = map.get(key);
@@ -195,5 +237,6 @@ public class TaxiApp {
             System.out.println("===========================================================");
             System.out.println();
         }
+        */
     }
 }
