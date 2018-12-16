@@ -232,10 +232,25 @@ public class TaxiApp {
                 else if (oldG == newG) {
                     m.addParent(current);
                 }
-                if (!open.contains(m)) {
+                if (!open.contains(m) && !closed.contains(m)) {
                     open.add(m);
                 }
             }
+        }
+    }
+
+    public static void pathFinder(MapNode stopNode, MapNode curr) {
+        System.out.println(curr.getX() + ", " + curr.getY());
+        curr.setIsExplored(true);
+        if (curr == stopNode) {
+            return;
+        }
+        ArrayList<MapNode> parents = curr.getParents();
+        for (MapNode p: parents) {
+            if (p.getIsExplored) {
+                continue;
+            }
+            pathFinder(stopNode, p);
         }
     }
 
@@ -249,7 +264,25 @@ public class TaxiApp {
         Client client = clients.get(0);
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
-        //aStarSearch(start, goal);
+        aStarSearch(start, goal);
+        /*
+        System.out.println("Start x, y");
+        System.out.println("(" + start.getX() + ", " + start.getY() + ")");
+        System.out.println("Goal x, y");
+        System.out.println("(" + goal.getX() + ", " + goal.getY() + ")");
+        MapNode curr = goal;
+        int counter = 0;
+        while(true) {
+            counter++;
+            System.out.println("(" + curr.getX() + ", " + curr.getY() + ") ==>");
+            if (curr == start) {
+                break;
+            }
+            ArrayList<MapNode> parents = curr.getParents();
+            curr = parents.get(0);
+        }
+        System.out.println(counter);
+        */
         //Path path = new Path();
         //path.makePath(goal);
         //paths.add(path);
