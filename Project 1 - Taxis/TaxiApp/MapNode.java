@@ -98,7 +98,7 @@ public class MapNode {
     }
 }
 
-class MapNodeComparator implements Comparator<MapNode>{ 
+/*class MapNodeComparator implements Comparator<MapNode>{ 
     public int compare(MapNode mn1, MapNode mn2) { 
         if (mn1.getF() < mn2.getF()) {
             return 1;
@@ -107,5 +107,5 @@ class MapNodeComparator implements Comparator<MapNode>{
             return -1;
         } 
         return 0; 
-        } 
+        } */ 
 } 

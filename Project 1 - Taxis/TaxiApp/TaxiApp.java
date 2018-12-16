@@ -15,7 +15,7 @@ public class TaxiApp {
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
+    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(0, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
     private static ArrayList<Path> paths = new ArrayList<>();
 
@@ -183,16 +183,22 @@ public class TaxiApp {
     /*
         This method is used to sort the open list.
     */
+<<<<<<< HEAD
 /*
     public static sortOpenList(){
         Collections.sort(open, new Comparator(){
+=======
+
+    public static void sortOpenList(){
+        Collections.sort(open, new Comparator<MapNode>() {
+>>>>>>> 0d25d7573947c78bb6d0128facecd9eefa21ff62
 
             @Override
             public int compare(MapNode m1, MapNode m2){
                 if(m1.getF() < m2.getF()){
                     return -1;
                 }
-                else if(m1.getF() < m2.getF()){
+                else if(m1.getF() > m2.getF()){
                     return 1;
                 }    
                 else{
@@ -200,12 +206,22 @@ public class TaxiApp {
                 }
             }
         });
+        return ;
     }
+<<<<<<< HEAD
 */
     public static void aStarSearch(MapNode S, MapNode G){
         open.add(S);
         while (!open.isEmpty()) {
             MapNode current = open.get(0);
+=======
+
+    public static void aStarSearch(MapNode S, MapNode G){
+        open.add(S);
+        while (!open.isEmpty()) {
+            sortOpenList();
+            MapNode current = open.remove(0);
+>>>>>>> 0d25d7573947c78bb6d0128facecd9eefa21ff62
             if (current == G) {
                 break;
             }
@@ -244,6 +260,7 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
+<<<<<<< HEAD
         Client client = clients.get(0);
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
@@ -257,6 +274,15 @@ public class TaxiApp {
             paths.add(path);
         }
         */
+=======
+       /* Client client = clients.get(0);
+        MapNode goal = client.getMapNodeOfClient(map);
+        MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
+        aStarSearch(start, goal);
+        //Path path = new Path();
+        //path.makePath(goal);
+        //paths.add(path);
+>>>>>>> 0d25d7573947c78bb6d0128facecd9eefa21ff62
         /*
         MapNode mn1 = new MapNode(0, 1);
         mn1.setG(0);
