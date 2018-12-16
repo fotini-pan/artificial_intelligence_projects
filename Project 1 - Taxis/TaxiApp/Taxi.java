@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Taxi {
     private double x;
@@ -36,5 +37,10 @@ public class Taxi {
 
     public void setTaxiNode(Node n){
         this.taxiNode = n;
+    }
+
+    public MapNode getMapNodeOfTaxi(HashMap<String, MapNode> hm){
+        String key = Double.toString(this.taxiNode.getX())+ Double.toString(this.taxiNode.getY());
+        return hm.get(key);
     }
 }

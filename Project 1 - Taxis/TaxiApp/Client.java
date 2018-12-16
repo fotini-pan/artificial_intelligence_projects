@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Client {
     private double x;
@@ -30,5 +31,10 @@ public class Client {
 
     public void setClientNode(Node n){
         this.clientNode = n;
+    }
+
+    public MapNode getMapNodeOfClient(HashMap<String, MapNode> hm){
+        String key = Double.toString(this.clientNode.getX()) + Double.toString(this.clientNode.getY());
+        return hm.get(key);
     }
 }
