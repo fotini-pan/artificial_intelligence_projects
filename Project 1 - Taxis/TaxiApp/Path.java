@@ -2,27 +2,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Path {
-    private ArrayList<ArrayList<Node>> path;
-    private int length;
-
+    private ArrayList<String> path;
+    private double totalCost;
+    private Taxi taxi;
     
-    public Path(){
+    public Path(Taxi taxi){
+        this.taxi = taxi;
+        this.totalCost = 0;
         this.path = new ArrayList<>();
     }
 
-    public Path(ArrayList<ArrayList<Node>> path){
-        this.path = path;
-    }
-
-    public ArrayList<ArrayList<Node>> getPath(){
+    public ArrayList<String> getPath(){
         return this.path;
     }
 
-    public makePath(MapNode goal) {
-        this.path
+    public void addNodeToPath(double x, double y){
+        String coordinates = Double.toString(x) + ", " + Double.toString(y);
+        this.path.add(coordinates);
     }
 
-    public void addNodeToPath(Node n){
-        this.path.add(n);
+    public void setTotalCost(double totalCost){
+        this.totalCost = totalCost;
+    }
+
+    public double getTotalCost(){
+        return this.totalCost;
+    }
+
+    public Taxi getTaxi(){
+        return taxi;
     }
 }
