@@ -46,18 +46,12 @@ public class TaxiApp {
             ArrayList<String> values = new ArrayList<String>(Arrays.asList(line.split(",")));
             Node n = new Node(values);
             nodes.add(n);
-            double x1 = clients.get(0).getClientNode().getX();
-            double y1 = clients.get(0).getClientNode().getY();
-            double x2 = node.getX();
-            double y2 = node.getY();
-            double distance = calculateDistance(x1, x2, y1, y2);
             String key = values.get(0) + values.get(1);
             currMapNode = map.get(key);
             if(currMapNode == null){
                 MapNode newMapNode = new MapNode(values); 
                 map.put(key, newMapNode);
                 newMapNode.addRefNode(n);
-                newMapNode.setH(distance);
                 if(prevMapNode != null){
                     Node tempNode = prevMapNode.getRefNodeById(n.getId());
                     if(tempNode != null){
@@ -68,7 +62,6 @@ public class TaxiApp {
             }
             else{
                 currMapNode.addRefNode(n);
-                currMapNode.setH(distance);
                 if(prevMapNode != null){
                     Node tempNode = prevMapNode.getRefNodeById(n.getId());
                     if(tempNode != null){
@@ -157,11 +150,12 @@ public class TaxiApp {
     public static void makeHeuristicValues(){
         double x1 = clients.get(0).getClientNode().getX();
         double y1 = clients.get(0).getClientNode().getY();
-        for(Node node : nodes){
-            double x2 = node.getX();
-            double y2 = node.getY();
+        for(String key : map.keySet()){
+            MapNode m = map.get(key);
+            double x2 = m.getX();
+            double y2 = m.getY();
             double distance = calculateDistance(x1, x2, y1, y2);
-            node.setHValue(distance);
+            m.setH(distance);
         }
     }
 
@@ -220,24 +214,6 @@ public class TaxiApp {
         readClients();
         findNodeOfClient();
         findNodeOfTaxi();
-        /*
         makeHeuristicValues();
-        for(String key : map.keySet()){
-            MapNode m = map.get(key);
-            ArrayList<Node> refNodes = m.getRefNodes();
-            ArrayList<MapNode> canGoNodes = m.getCanGoNodes();
-            System.out.println(m.getX() + ", " + m.getY());
-            for(Node node : refNodes){
-                System.out.println("    " + node.getX() + ", " + node.getY() + ", " + node.getName());
-            }
-            System.out.println("-----------------------");
-            System.out.println();
-            for(MapNode mapNode : canGoNodes){
-                System.out.println("    " + mapNode.getX() + ", " + mapNode.getY());
-            }
-            System.out.println("===========================================================");
-            System.out.println();
-        }
-        */
     }
 }
