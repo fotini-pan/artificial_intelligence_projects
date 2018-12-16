@@ -15,7 +15,7 @@ public class TaxiApp {
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(0, new MapNodeComparator());
+    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
     private static ArrayList<Path> paths = new ArrayList<>();
 
@@ -183,7 +183,7 @@ public class TaxiApp {
     /*
         This method is used to sort the open list.
     */
-
+/*
     public static sortOpenList(){
         Collections.sort(open, new Comparator(){
 
@@ -201,11 +201,11 @@ public class TaxiApp {
             }
         });
     }
-
-    /*public static void aStarSearch(MapNode S, MapNode G){
+*/
+    public static void aStarSearch(MapNode S, MapNode G){
         open.add(S);
         while (!open.isEmpty()) {
-            MapNode current = open.remove(0);
+            MapNode current = open.get(0);
             if (current == G) {
                 break;
             }
@@ -235,7 +235,7 @@ public class TaxiApp {
                 }
             }
         }
-    }*/
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
@@ -245,7 +245,10 @@ public class TaxiApp {
         findNodeOfTaxi();
         makeHeuristicValues();
         Client client = clients.get(0);
-        MapNode goal = client.getClientMapNode();
+        MapNode goal = client.getMapNodeOfClient(map);
+        MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
+        aStarSearch(start, goal);
+        /*
         for (Taxi taxi: taxis) {
             MapNode start = taxi.getTaxiMapNode();
             aStarSearch(start, goal);
@@ -253,6 +256,7 @@ public class TaxiApp {
             path.makePath(goal);
             paths.add(path);
         }
+        */
         /*
         MapNode mn1 = new MapNode(0, 1);
         mn1.setG(0);

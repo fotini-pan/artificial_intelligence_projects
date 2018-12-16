@@ -18,11 +18,7 @@ public class Path {
         return this.path;
     }
 
-    public makePath(MapNode goal) {
-        this.path
-    }
-
-    public void addNodeToPath(Node n){
-        this.path.add(n);
+    public void makePath(MapNode goal) {
+        
     }
 }
