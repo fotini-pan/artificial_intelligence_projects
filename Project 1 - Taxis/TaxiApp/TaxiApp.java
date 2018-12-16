@@ -5,6 +5,8 @@ import java.lang.Math;
 import java.io.File;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TaxiApp {
     private static ArrayList<Taxi> taxis = new ArrayList<>();
@@ -176,7 +178,29 @@ public class TaxiApp {
         return distance;
     }
 
-    public static void aStarSearch(MapNode S, MapNode G){
+    /*
+        This method is used to sort the open list.
+    */
+
+    public static sortOpenList(){
+        Collections.sort(open, new Comparator(){
+
+            @Override
+            public int compare(MapNode m1, MapNode m2){
+                if(m1.getF() < m2.getF()){
+                    return -1;
+                }
+                else if(m1.getF() < m2.getF()){
+                    return 1;
+                }    
+                else{
+                    return 0;
+                }
+            }
+        });
+    }
+
+    /*public static void aStarSearch(MapNode S, MapNode G){
         open.add(S);
         while (!open.isEmpty()) {
             MapNode current = open.remove(0);
@@ -206,7 +230,7 @@ public class TaxiApp {
                 }
             }
         }
-    }
+    }*/
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
@@ -216,4 +240,5 @@ public class TaxiApp {
         findNodeOfTaxi();
         makeHeuristicValues();
     }
+    
 }
