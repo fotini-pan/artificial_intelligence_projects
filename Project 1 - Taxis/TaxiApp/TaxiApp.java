@@ -15,7 +15,7 @@ public class TaxiApp {
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(0, new MapNodeComparator());
+    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
     //private static ArrayList<Path> paths = new ArrayList<>();
 
@@ -59,18 +59,27 @@ public class TaxiApp {
                 if(prevMapNode != null){
                     Node tempNode = prevMapNode.getRefNodeById(n.getId());
                     if(tempNode != null){
-                        newMapNode.addCanGoNode(prevMapNode);
-                        prevMapNode.addCanGoNode(newMapNode);    
+                        if(!(prevMapNode.getCanGoNodes().contains(newMapNode))){
+                            prevMapNode.addCanGoNode(newMapNode);
+                        }
+                        if(!(newMapNode.getCanGoNodes().contains(prevMapNode))){
+                            newMapNode.addCanGoNode(prevMapNode);
+                        }
                     }
                 }
             }
             else{
                 currMapNode.addRefNode(n);
                 if(prevMapNode != null){
-                    Node tempNode = prevMapNode.getRefNodeById(n.getId());
-                    if(tempNode != null){
-                        currMapNode.addCanGoNode(prevMapNode);
-                        prevMapNode.addCanGoNode(currMapNode);    
+                    Node tempNode1 = prevMapNode.getRefNodeById(n.getId());
+                    Node tempNode2 = prevMapNode.getRefNodeByXY(n.getX(), n.getY());
+                    if(tempNode1 != null && tempNode2==null){
+                        if(!(prevMapNode.getCanGoNodes().contains(currMapNode))){
+                            prevMapNode.addCanGoNode(currMapNode);
+                        }
+                        if(!(currMapNode.getCanGoNodes().contains(prevMapNode))){
+                            currMapNode.addCanGoNode(prevMapNode);
+                        }    
                     }
                 }
             }
@@ -185,7 +194,7 @@ public class TaxiApp {
     */
 
     public static void sortOpenList(){
-        Collections.sort(open, new Comparator<MapNode>() {
+        Collections.sort(open, new Comparator<MapNode>(){
 
             @Override
             public int compare(MapNode m1, MapNode m2){
@@ -241,11 +250,22 @@ public class TaxiApp {
                 }
             }
         }
+        return -1;
     }
 
-    public static void pathFinder(MapNode goal){
-
-
+    public static void pathFinder(MapNode stopNode, MapNode curr) {
+        System.out.println(curr.getX() + ", " + curr.getY());
+        curr.setIsExplored(true);
+        if (curr == stopNode) {
+            return;
+        }
+        ArrayList<MapNode> parents = curr.getParents();
+        for (MapNode p: parents) {
+            if (p.getIsExplored()) {
+                continue;
+            }
+            pathFinder(stopNode, p);
+        }
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -259,6 +279,8 @@ public class TaxiApp {
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
         double cost = aStarSearch(start, goal);
+        //pathFinder(start, goal);
+        System.out.println(cost);
         /*MapNode m = goal; 
         int count = 0;
         while(true){
@@ -270,7 +292,13 @@ public class TaxiApp {
                 break;
             }
         }
-        System.out.println(count);  */
+        System.out.println(count);*/
+        for(String key : map.keySet()){
+            MapNode m = map.get(key);
+            if(m.getParents().size()>0){
+                System.out.println(m.getParents().size());
+            }
+        }
     }
     
 }

@@ -80,6 +80,16 @@ public class MapNode {
         return n;
     }
 
+    public Node getRefNodeByXY(double x, double y){
+        Node n = null;
+        for(Node node : this.refNodes){
+            if(node.getX()==x && node.getY()==y){
+                n = node;
+            }
+        }
+        return n;
+    }
+
     public double getH(){
         return this.h;
     }
@@ -119,4 +129,5 @@ public class MapNode {
         } 
         return 0; 
         } 
-} */
+} 
+*/
