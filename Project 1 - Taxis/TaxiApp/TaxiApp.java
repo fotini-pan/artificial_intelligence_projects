@@ -17,7 +17,7 @@ public class TaxiApp {
     private static ArrayList<MapNode> open = new ArrayList<>();
     //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
-    private static ArrayList<Path> paths = new ArrayList<>();
+    //private static ArrayList<Path> paths = new ArrayList<>();
 
     /*
         The 3 below methods are used to read the input data.
@@ -203,13 +203,17 @@ public class TaxiApp {
         return ;
     }
 
-    public static void aStarSearch(MapNode S, MapNode G){
+    /*
+        This function is used to perform the A Star algorithm.
+    */
+
+    public static double aStarSearch(MapNode S, MapNode G){
         open.add(S);
         while (!open.isEmpty()) {
             sortOpenList();
             MapNode current = open.remove(0);
             if (current == G) {
-                break;
+                return current.getG();
             }
             closed.add(current);
             double x1 = current.getX();
@@ -264,57 +268,19 @@ public class TaxiApp {
         Client client = clients.get(0);
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
-        aStarSearch(start, goal);
-        /*
-        System.out.println("Start x, y");
-        System.out.println("(" + start.getX() + ", " + start.getY() + ")");
-        System.out.println("Goal x, y");
-        System.out.println("(" + goal.getX() + ", " + goal.getY() + ")");
-        MapNode curr = goal;
-        int counter = 0;
-        while(true) {
-            counter++;
-            System.out.println("(" + curr.getX() + ", " + curr.getY() + ") ==>");
-            if (curr == start) {
+        double cost = aStarSearch(start, goal);
+        /*MapNode m = goal; 
+        int count = 0;
+        while(true){
+            count = count + 1;
+            System.out.println(m.getX() + ", " + m.getY());
+            m = m.getParents().get(0);
+            if(m == start){
+                System.out.println(m.getX() + ", " + m.getY());
                 break;
             }
-            ArrayList<MapNode> parents = curr.getParents();
-            curr = parents.get(0);
         }
-        System.out.println(counter);
-        */
-        //Path path = new Path();
-        //path.makePath(goal);
-        //paths.add(path);
-        /*
-        MapNode mn1 = new MapNode(0, 1);
-        mn1.setG(0);
-        mn1.setH(1);
-        MapNode mn2 = new MapNode(0, 2);
-        mn2.setG(1);
-        mn2.setH(0);
-        MapNode mn3 = new MapNode(1, 1);
-        mn3.setG(2);
-        mn3.setH(1);
-        open.add(mn3);
-        System.out.println("Added mn3");
-        for (MapNode mn: open) {
-            System.out.println("X = " + mn.getX());
-            System.out.println("Y = " + mn.getY());
-        }
-        open.add(mn2);
-        System.out.println("Added mn2");
-        for (MapNode mn: open) {
-            System.out.println("X = " + mn.getX());
-            System.out.println("Y = " + mn.getY());
-        }
-        open.add(mn1);
-        System.out.println("Added mn1");
-        for (MapNode mn: open) {
-            System.out.println("X = " + mn.getX());
-            System.out.println("Y = " + mn.getY());
-        }
-        */
+        System.out.println(count);  */
     }
     
 }
