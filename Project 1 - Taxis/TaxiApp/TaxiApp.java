@@ -17,7 +17,7 @@ public class TaxiApp {
     private static ArrayList<MapNode> open = new ArrayList<>();
     //private static PriorityQueue<MapNode> open = new PriorityQueue<>(0, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
-    private static ArrayList<Path> paths = new ArrayList<>();
+    //private static ArrayList<Path> paths = new ArrayList<>();
 
     /*
         The 3 below methods are used to read the input data.
@@ -203,13 +203,17 @@ public class TaxiApp {
         return ;
     }
 
-    public static void aStarSearch(MapNode S, MapNode G){
+    /*
+        This function is used to perform the A Star algorithm.
+    */
+
+    public static double aStarSearch(MapNode S, MapNode G){
         open.add(S);
         while (!open.isEmpty()) {
             sortOpenList();
             MapNode current = open.remove(0);
             if (current == G) {
-                break;
+                return current.getG();
             }
             closed.add(current);
             double x1 = current.getX();
@@ -232,11 +236,16 @@ public class TaxiApp {
                 else if (oldG == newG) {
                     m.addParent(current);
                 }
-                if (!open.contains(m)) {
+                if (!open.contains(m) && !closed.contains(m)) {
                     open.add(m);
                 }
             }
         }
+    }
+
+    public static void pathFinder(MapNode goal){
+
+
     }
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -246,36 +255,22 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-       /* Client client = clients.get(0);
+        Client client = clients.get(0);
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
-        aStarSearch(start, goal);
-        //Path path = new Path();
-        //path.makePath(goal);
-        //paths.add(path);
-        /*
-        MapNode mn1 = new MapNode(0, 1);
-        mn1.setG(0);
-        mn1.setH(1);
-        MapNode mn2 = new MapNode(0, 2);
-        mn2.setG(1);
-        mn2.setH(0);
-        MapNode mn3 = new MapNode(1, 1);
-        mn3.setG(2);
-        mn3.setH(1);
-        open.add(mn3);
-        for (MapNode mn: open) {
-            System.out.print(mn);
+        double cost = aStarSearch(start, goal);
+        /*MapNode m = goal; 
+        int count = 0;
+        while(true){
+            count = count + 1;
+            System.out.println(m.getX() + ", " + m.getY());
+            m = m.getParents().get(0);
+            if(m == start){
+                System.out.println(m.getX() + ", " + m.getY());
+                break;
+            }
         }
-        open.add(mn2);
-        for (MapNode mn: open) {
-            System.out.print(mn);
-        }
-        open.add(mn1);
-        for (MapNode mn: open) {
-            System.out.print(mn);
-        }
-        */
+        System.out.println(count);  */
     }
     
 }
