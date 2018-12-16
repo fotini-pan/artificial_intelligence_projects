@@ -46,11 +46,12 @@ public class MapNode {
     }
 
     public Node getRefNodeById(int id){
+        Node n = null;
         for(Node node : this.refNodes){
             if(node.getId()==id){
-                return node;
+                n = node;
             }
         }
-        return null;
+        return n;
     }
 }
