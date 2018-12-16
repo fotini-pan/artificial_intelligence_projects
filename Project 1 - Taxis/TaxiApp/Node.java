@@ -11,7 +11,6 @@ public class Node {
         this.y = y;
         this.id = id;
         this.name = name;
-        this.hvalue = 0;
     }
 
     public Node(ArrayList<String> arr) {

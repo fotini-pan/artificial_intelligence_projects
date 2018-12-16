@@ -1,23 +1,25 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Path {
-    private ArrayList<Node> path;
+    private ArrayList<ArrayList<Node>> path;
+    private int length;
 
     
     public Path(){
         this.path = new ArrayList<>();
     }
 
-    public Path(ArrayList<Node> path){
+    public Path(ArrayList<ArrayList<Node>> path){
         this.path = path;
     }
 
-    public double getX(){
-        return this.x;
+    public ArrayList<ArrayList<Node>> getPath(){
+        return this.path;
     }
 
-    public ArrayList<Node> getPath(){
-        return this.path;
+    public makePath(MapNode goal) {
+        this.path
     }
 
     public void addNodeToPath(Node n){

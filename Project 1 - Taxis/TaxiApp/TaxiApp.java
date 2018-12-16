@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.HashMap;
 import java.io.FileNotFoundException;
 import java.lang.Math;
@@ -12,8 +13,9 @@ public class TaxiApp {
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
+    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(0, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
-    //private static ArrayList<Path> paths = new ArrayList<>();
+    private static ArrayList<Path> paths = new ArrayList<>();
 
     /*
         The 3 below methods are used to read the input data.
@@ -141,7 +143,7 @@ public class TaxiApp {
             taxi.setTaxiNode(nodes.get(posMin));
         }
     }
-        
+
     /*
         This method is used to compute the heuristic value of each node from our goal, which is the coordinates of clientNode field 
         from our client.
@@ -180,6 +182,9 @@ public class TaxiApp {
         open.add(S);
         while (!open.isEmpty()) {
             MapNode current = open.remove(0);
+            if (current == G) {
+                break;
+            }
             closed.add(current);
             double x1 = current.getX();
             double y1 = current.getY();
@@ -215,5 +220,37 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
+        Client client = clients.get(0);
+        MapNode goal = client.getClientMapNode();
+        for (Taxi taxi: taxis) {
+            MapNode start = taxi.getTaxiMapNode();
+            aStarSearch(start, goal);
+            Path path = new Path();
+            path.makePath(goal);
+            paths.add(path);
+        }
+        /*
+        MapNode mn1 = new MapNode(0, 1);
+        mn1.setG(0);
+        mn1.setH(1);
+        MapNode mn2 = new MapNode(0, 2);
+        mn2.setG(1);
+        mn2.setH(0);
+        MapNode mn3 = new MapNode(1, 1);
+        mn3.setG(2);
+        mn3.setH(1);
+        open.add(mn3);
+        for (MapNode mn: open) {
+            System.out.print(mn);
+        }
+        open.add(mn2);
+        for (MapNode mn: open) {
+            System.out.print(mn);
+        }
+        open.add(mn1);
+        for (MapNode mn: open) {
+            System.out.print(mn);
+        }
+        */
     }
 }

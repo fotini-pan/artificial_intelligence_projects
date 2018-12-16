@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MapNode {
     private double x;
@@ -96,3 +97,15 @@ public class MapNode {
         return (this.g + this.h);
     }
 }
+
+class MapNodeComparator implements Comparator<MapNode>{ 
+    public int compare(MapNode mn1, MapNode mn2) { 
+        if (mn1.getF() < mn2.getF()) {
+            return 1;
+        } 
+        else if (mn1.getF() > mn2.getF()) {
+            return -1;
+        } 
+        return 0; 
+        } 
+} 
