@@ -14,8 +14,6 @@ public class TaxiApp {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
-    private static ArrayList<MapNode> open = new ArrayList<>();
-    private static ArrayList<MapNode> closed = new ArrayList<>();
     //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     
     /*
@@ -192,7 +190,7 @@ public class TaxiApp {
         This method is used to sort the open list.
     */
 
-    public static void sortOpenList(){
+    public static void sortList(ArrayList<MapNode> open){
         Collections.sort(open, new Comparator<MapNode>(){
 
             @Override
@@ -216,9 +214,11 @@ public class TaxiApp {
     */
 
     public static double aStarSearch(MapNode S, MapNode G){
+        ArrayList<MapNode> open = new ArrayList<>();
+        ArrayList<MapNode> closed = new ArrayList<>();
         open.add(S);
         while (!open.isEmpty()) {
-            sortOpenList();
+            sortList(open);
             MapNode current = open.remove(0);
             if (current == G) {
                 return current.getG();
@@ -252,8 +252,6 @@ public class TaxiApp {
                 }
             }
         }
-        open.clear();
-        closed.clear();
         return -1;
     }
 
@@ -322,10 +320,23 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        /*findAllPaths();
+        
+        
+        Client client = clients.get(0);
+        for(Taxi taxi : taxis){
+            MapNode goal = client.getMapNodeOfClient(map);
+            MapNode start = taxi.getMapNodeOfTaxi(map);
+            double minCost = aStarSearch(start, goal);
+            clearAllParents();
+            System.out.println(minCost);
+        }
+        System.out.println("=======================");
+
+
+        findAllPaths();
 
         System.out.print("CLIENT : ");
-        System.out.println(clients.get(0).getX() + ", " + clients.get(0).getY());
+        System.out.println(clients.get(0).getMapNodeOfClient(map).getX() + ", " + clients.get(0).getMapNodeOfClient(map).getY());
         System.out.println("========================================");
 
         for(Taxi taxi : taxis){
@@ -336,8 +347,6 @@ public class TaxiApp {
                 }
                 System.out.println(".................................................");
             }
-        }*/
-        MapNode m = map.get("23.757984237.9626349");
-        System.out.println(m.getX() + ", " + m.getY());
+        }
     }
 }
