@@ -3,6 +3,8 @@ import java.util.PriorityQueue;
 import java.util.HashMap;
 import java.io.FileNotFoundException;
 import java.lang.Math;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.io.File;
 import java.util.Scanner;
 import java.util.Arrays;
@@ -244,7 +246,7 @@ public class TaxiApp {
                     m.setG(newG);
                     m.clearAndAddParent(current);
                 }
-                else if (oldG == newG) {
+                else if (oldG < newG && newG < oldG*1.019) {
                     m.addParent(current);
                 }
                 if (!open.contains(m) && !closed.contains(m)) {
@@ -313,7 +315,11 @@ public class TaxiApp {
         }
         return minTaxi;
     }
-    
+
+    /*
+        This method is used for making the kml part for all the routes for all the taxis
+    */
+
     public static String makeKmlForTaxis(Taxi minTaxi) {
         String kml = "";
         String name = "Taxi";
@@ -349,6 +355,11 @@ public class TaxiApp {
         return kml;
     }
 
+
+    /*
+        This method is used to create the final kml file(run on terminal : Java TaxiApp > "name_of_file")
+    */
+
     public static void createKMLFile(String kmlMiddle){
         String kmlStart =   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "\t<kml xmlns=\"http://earth.google.com/kml/2.1\">\n" +
                             "\t<Document>\n" + "\t\t<name>Taxi Routes</name>\n" + "\t\t<Style id=\"green\">\n" + "\t\t\t<LineStyle>\n" + 
@@ -362,7 +373,6 @@ public class TaxiApp {
         System.out.println(kml);
 
     }
-
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
