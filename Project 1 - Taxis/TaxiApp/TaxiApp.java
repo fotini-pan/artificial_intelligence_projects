@@ -14,7 +14,6 @@ public class TaxiApp {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     
     /*
         The 3 below methods are used to read the input data.
@@ -216,6 +215,7 @@ public class TaxiApp {
     public static double aStarSearch(MapNode S, MapNode G){
         ArrayList<MapNode> open = new ArrayList<>();
         ArrayList<MapNode> closed = new ArrayList<>();
+        //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
         open.add(S);
         while (!open.isEmpty()) {
             sortList(open);
@@ -244,7 +244,7 @@ public class TaxiApp {
                     m.setG(newG);
                     m.clearAndAddParent(current);
                 }
-                else if (oldG*1.01 < newG) {
+                else if (oldG == newG) {
                     m.addParent(current);
                 }
                 if (!open.contains(m) && !closed.contains(m)) {
@@ -312,51 +312,68 @@ public class TaxiApp {
             clearAllParents();
         }
         return minTaxi;
-    } 
+    }
+    
+    public static String makeKmlForTaxis(Taxi minTaxi) {
+        String kml = "";
+        String name = "Taxi";
+        String color = "#red";
+        String tabs2 = "\t\t";
+        String tabs3 = "\t\t\t";
+        String tabs4 = "\t\t\t\t";
+        String tabs5 = "\t\t\t\t\t";
+        String nl = "\n";
+        String bodyFormat = nl+tabs2+"<Placemark>"+nl+tabs3+"<name>%s</name>"+nl+tabs3+"<styleUrl>%s</styleUrl>"+
+                            nl+tabs3+"<LineString>"+nl+tabs4+"<altitudeMode>relative</altitudeMode>"+
+                            nl+tabs4+"<coordinates>%s"+nl+tabs4+"</coordinates>"+
+                            nl+tabs3+"</LineString>"+nl+tabs2+"</Placemark>";
+        for (Taxi taxi: taxis) {
+            if (taxi == minTaxi) {
+                color = "#green";
+            }
+            else {
+                color = "#red";
+            }
+            ArrayList<ArrayList<MapNode>> paths = taxi.getPathToClient();
+            for (ArrayList<MapNode> path: paths) {
+                String coordinates = "";
+                for (MapNode m: path) {
+                    coordinates += nl+tabs5+m.getX()+", "+m.getY();
+                }
+                String taxiNum = Integer.toString(taxis.indexOf(taxi)+1);
+                String pathNum = Integer.toString(paths.indexOf(path)+1);
+                String body = String.format(bodyFormat, name+taxiNum+"."+pathNum, color, coordinates);
+                kml += body;
+            }
+        }
+        return kml;
+    }
 
-    public static void createKMLFile(){
+    public static void createKMLFile(String kmlMiddle){
         String kmlStart =   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "\t<kml xmlns=\"http://earth.google.com/kml/2.1\">\n" +
                             "\t<Document>\n" + "\t\t<name>Taxi Routes</name>\n" + "\t\t<Style id=\"green\">\n" + "\t\t\t<LineStyle>\n" + 
                             "\t\t\t\t<color>ff009900</color>\n" + "\t\t\t\t<width>4</width>\n" + "\t\t\t</LineStyle>\n" + 
                             "\t\t</Style>\n" + "\t\t<Style id=\"red\">\n" + "\t\t\t<LineStyle>\n" + 
                             "\t\t\t\t<color>ff0000ff</color>\n" + "\t\t\t\t<width>4</width>\n" + "\t\t\t</LineStyle>\n" + 
-                            "\t\t</Style>\n";
+                            "\t\t</Style>";
 
-        String kmlEnd =     "\t</Document>\n" + "\t</kml>\n";
-
-        String path = "/Έγγραφα/ΣΗΜΜΥ/7o Εξάμηνο/Τεχνητή Νοημοσύνη/Εργασίες/Προγραμματιστικές/artificial_intelligence_projects/Project 1 - Taxis/TaxiApp/my_map.kml";
-        File myFile = new File(path);
-        myFile.getParentFile().mkdirs();
-        myFile.createNewFile();
-        System.out.println(kmlStart);
-        System.out.println("....");
-        System.out.println(kmlEnd);
+        String kmlEnd =     "\n\t</Document>\n" + "\t</kml>\n";
+        String kml = kmlStart + kmlMiddle + kmlEnd;
+        System.out.println(kml);
 
     }
 
 
     public static void main(String[] args) throws FileNotFoundException {
-       /* readTaxis();
+        readTaxis();
         readNodes();
         readClients();
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        findAllPaths();
-
-        System.out.print("CLIENT : ");
-        System.out.println(clients.get(0).getMapNodeOfClient(map).getX() + ", " + clients.get(0).getMapNodeOfClient(map).getY());
-        System.out.println("========================================");
-
-        for(Taxi taxi : taxis){
-            System.out.println("TAXI : " + taxi.getTaxiNode().getX() + ", " + taxi.getTaxiNode().getY());
-            for(ArrayList<MapNode> arr : taxi.getPathToClient()){
-                for(MapNode m : arr){
-                    System.out.println(m.getX() + ", " + m.getY());
-                }
-                System.out.println(".................................................");
-            }
-        }*/
-        createKMLFile();
+        Taxi minTaxi = findAllPaths();
+        
+        String kmlMiddle = makeKmlForTaxis(minTaxi);
+        createKMLFile(kmlMiddle);
     }
 }
