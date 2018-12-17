@@ -15,10 +15,9 @@ public class TaxiApp {
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
     private static ArrayList<MapNode> open = new ArrayList<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     private static ArrayList<MapNode> closed = new ArrayList<>();
-    //private static ArrayList<Path> paths = new ArrayList<>();
-
+    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
+    
     /*
         The 3 below methods are used to read the input data.
         readNodes() also produces the graph of the nodes
@@ -229,6 +228,9 @@ public class TaxiApp {
             double y1 = current.getY();
             ArrayList<MapNode> children = current.getCanGoNodes();
             for (MapNode m: children) {
+                if(closed.contains(m)){
+                    continue;
+                }
                 double x2 = m.getX();
                 double y2 = m.getY();
                 double oldG = m.getG();
@@ -250,23 +252,68 @@ public class TaxiApp {
                 }
             }
         }
+        open.clear();
+        closed.clear();
         return -1;
     }
 
-    public static void pathFinder(MapNode stopNode, MapNode curr) {
-        System.out.println(curr.getX() + ", " + curr.getY());
-        curr.setIsExplored(true);
-        if (curr == stopNode) {
-            return;
-        }
-        ArrayList<MapNode> parents = curr.getParents();
-        for (MapNode p: parents) {
-            if (p.getIsExplored()) {
+    /* Given a taxi and a client, the below method finds all the possible paths */
+    
+    public static ArrayList<ArrayList<MapNode>> pathFinder(MapNode stopNode, MapNode startNode){
+        ArrayList<ArrayList<MapNode>> q = new ArrayList<>();
+        ArrayList<ArrayList<MapNode>> p = new ArrayList<>();
+        ArrayList<MapNode> path = new ArrayList<>();
+        path.add(startNode);
+        q.add(path);
+        while(!q.isEmpty()){
+            path = q.remove(0);
+            if(path.get(path.size()-1)==stopNode){
+                p.add(path);
                 continue;
             }
-            pathFinder(stopNode, p);
+            for(MapNode mNode : path.get(path.size()-1).getParents()){
+                if(!path.contains(mNode)){
+                    ArrayList<MapNode> newPath = new ArrayList<>(path); 
+                    newPath.add(mNode);
+                    q.add(newPath);
+                }
+            }
+        }
+        return p;
+    }
+
+    public static void clearAllParents(){
+        for(String key : map.keySet()){
+            MapNode m = map.get(key);
+            m.clearParents();
+            m.setG(0);
         }
     }
+    /*
+        This method is used to find all the possible paths for each taxi and returns the reference of the taxi that 
+        makes the least distnace
+    */
+    public static Taxi findAllPaths(){
+        Client client = clients.get(0);
+        MapNode goal = client.getMapNodeOfClient(map);
+        MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
+        double minCost = aStarSearch(start, goal);
+        Taxi minTaxi = taxis.get(0);
+        ArrayList<ArrayList<MapNode>> p = pathFinder(start, goal);
+        taxis.get(0).setPathToClient(p);
+        for(int i = 1; i < taxis.size(); i++){
+            start = taxis.get(i).getMapNodeOfTaxi(map);
+            double cost = aStarSearch(start, goal);
+            p = pathFinder(start, goal);
+            taxis.get(i).setPathToClient(p);
+            if(cost < minCost){
+                minCost = cost;
+                minTaxi = taxis.get(i);
+            }
+            clearAllParents();
+        }
+        return minTaxi;
+    } 
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
@@ -275,30 +322,22 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        Client client = clients.get(0);
-        MapNode goal = client.getMapNodeOfClient(map);
-        MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
-        double cost = aStarSearch(start, goal);
-        //pathFinder(start, goal);
-        System.out.println(cost);
-        /*MapNode m = goal; 
-        int count = 0;
-        while(true){
-            count = count + 1;
-            System.out.println(m.getX() + ", " + m.getY());
-            m = m.getParents().get(0);
-            if(m == start){
-                System.out.println(m.getX() + ", " + m.getY());
-                break;
+        /*findAllPaths();
+
+        System.out.print("CLIENT : ");
+        System.out.println(clients.get(0).getX() + ", " + clients.get(0).getY());
+        System.out.println("========================================");
+
+        for(Taxi taxi : taxis){
+            System.out.println("TAXI : " + taxi.getTaxiNode().getX() + ", " + taxi.getTaxiNode().getY());
+            for(ArrayList<MapNode> arr : taxi.getPathToClient()){
+                for(MapNode m : arr){
+                    System.out.println(m.getX() + ", " + m.getY());
+                }
+                System.out.println(".................................................");
             }
-        }
-        System.out.println(count);*/
-        for(String key : map.keySet()){
-            MapNode m = map.get(key);
-            if(m.getParents().size()>0){
-                System.out.println(m.getParents().size());
-            }
-        }
+        }*/
+        MapNode m = map.get("23.757984237.9626349");
+        System.out.println(m.getX() + ", " + m.getY());
     }
-    
 }
