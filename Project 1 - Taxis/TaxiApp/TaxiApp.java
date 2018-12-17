@@ -312,7 +312,42 @@ public class TaxiApp {
             clearAllParents();
         }
         return minTaxi;
-    } 
+    }
+    
+    public static String makeKmlForTaxis(Taxi minTaxi) {
+        String kml = "";
+        String name = "Taxi";
+        String color = "#red";
+        String tabs2 = "\t\t";
+        String tabs3 = "\t\t\t";
+        String tabs4 = "\t\t\t\t";
+        String tabs5 = "\t\t\t\t\t";
+        String nl = "\n";
+        String bodyFormat = nl+tabs2+"<Placemark>"+nl+tabs3+"<name>%s</name>"+nl+tabs3+"<styleUrl>%s</styleUrl>"+
+                            nl+tabs3+"<LineString>"+nl+tabs4+"<altitudeMode>relative</altitudeMode>"+
+                            nl+tabs4+"<coordinates>%s"+nl+tabs4+"</coordinates>"+
+                            nl+tabs3+"</LineString>"+nl+tabs2+"</Placemark>";
+        for (Taxi taxi: taxis) {
+            if (taxi == minTaxi) {
+                color = "#green";
+            }
+            else {
+                color = "#red";
+            }
+            ArrayList<ArrayList<MapNode>> paths = taxi.getPathToClient();
+            for (ArrayList<MapNode> path: paths) {
+                String coordinates = "";
+                for (MapNode m: path) {
+                    coordinates += nl+tabs5+m.getX()+", "+m.getY();
+                }
+                String taxiNum = Integer.toString(taxis.indexOf(taxi)+1);
+                String pathNum = Integer.toString(paths.indexOf(path)+1);
+                String body = String.format(bodyFormat, name+taxiNum+pathNum, color, coordinates);
+                kml += body;
+            }
+        }
+        return kml;
+    }
 
     public static void main(String[] args) throws FileNotFoundException {
         readTaxis();
@@ -321,6 +356,8 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        findAllPaths();
+        Taxi minTaxi = findAllPaths();
+        String kmlForTaxis = makeKmlForTaxis(minTaxi);
+        System.out.println(kmlForTaxis);
     }
 }
