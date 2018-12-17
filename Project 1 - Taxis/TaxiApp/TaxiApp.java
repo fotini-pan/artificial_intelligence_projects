@@ -244,7 +244,7 @@ public class TaxiApp {
                     m.setG(newG);
                     m.clearAndAddParent(current);
                 }
-                else if (oldG == newG) {
+                else if (oldG*1.01 < newG) {
                     m.addParent(current);
                 }
                 if (!open.contains(m) && !closed.contains(m)) {
@@ -299,6 +299,7 @@ public class TaxiApp {
         Taxi minTaxi = taxis.get(0);
         ArrayList<ArrayList<MapNode>> p = pathFinder(start, goal);
         taxis.get(0).setPathToClient(p);
+        clearAllParents();
         for(int i = 1; i < taxis.size(); i++){
             start = taxis.get(i).getMapNodeOfTaxi(map);
             double cost = aStarSearch(start, goal);
@@ -320,19 +321,6 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        
-        
-        Client client = clients.get(0);
-        for(Taxi taxi : taxis){
-            MapNode goal = client.getMapNodeOfClient(map);
-            MapNode start = taxi.getMapNodeOfTaxi(map);
-            double minCost = aStarSearch(start, goal);
-            clearAllParents();
-            System.out.println(minCost);
-        }
-        System.out.println("=======================");
-
-
         findAllPaths();
 
         System.out.print("CLIENT : ");
