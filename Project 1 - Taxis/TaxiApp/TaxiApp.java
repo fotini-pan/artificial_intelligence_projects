@@ -314,8 +314,29 @@ public class TaxiApp {
         return minTaxi;
     } 
 
+    public static void createKMLFile(){
+        String kmlStart =   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "\t<kml xmlns=\"http://earth.google.com/kml/2.1\">\n" +
+                            "\t<Document>\n" + "\t\t<name>Taxi Routes</name>\n" + "\t\t<Style id=\"green\">\n" + "\t\t\t<LineStyle>\n" + 
+                            "\t\t\t\t<color>ff009900</color>\n" + "\t\t\t\t<width>4</width>\n" + "\t\t\t</LineStyle>\n" + 
+                            "\t\t</Style>\n" + "\t\t<Style id=\"red\">\n" + "\t\t\t<LineStyle>\n" + 
+                            "\t\t\t\t<color>ff0000ff</color>\n" + "\t\t\t\t<width>4</width>\n" + "\t\t\t</LineStyle>\n" + 
+                            "\t\t</Style>\n";
+
+        String kmlEnd =     "\t</Document>\n" + "\t</kml>\n";
+
+        String path = "/Έγγραφα/ΣΗΜΜΥ/7o Εξάμηνο/Τεχνητή Νοημοσύνη/Εργασίες/Προγραμματιστικές/artificial_intelligence_projects/Project 1 - Taxis/TaxiApp/my_map.kml";
+        File myFile = new File(path);
+        myFile.getParentFile().mkdirs();
+        myFile.createNewFile();
+        System.out.println(kmlStart);
+        System.out.println("....");
+        System.out.println(kmlEnd);
+
+    }
+
+
     public static void main(String[] args) throws FileNotFoundException {
-        readTaxis();
+       /* readTaxis();
         readNodes();
         readClients();
         findNodeOfClient();
@@ -335,6 +356,7 @@ public class TaxiApp {
                 }
                 System.out.println(".................................................");
             }
-        }
+        }*/
+        createKMLFile();
     }
 }
