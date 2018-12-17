@@ -321,18 +321,6 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        
-        Client client = clients.get(0);
-        MapNode goal = client.getMapNodeOfClient(map);
-        
-        for (Taxi taxi: taxis) {
-            MapNode start = taxi.getMapNodeOfTaxi(map);
-            double cost = aStarSearch(start, goal);
-            clearAllParents();
-            System.out.print(taxi.getId() + " ==> ");
-            System.out.println(cost);
-        }
-        Taxi minTaxi = findAllPaths();
-        System.out.println(minTaxi.getId());
+        findAllPaths();
     }
 }
