@@ -119,9 +119,4 @@ public class MapNode {
         } 
         return 0; 
         } 
-<<<<<<< HEAD
-} 
-*/
-=======
 } */
->>>>>>> d8635cc5c01f37c46cfbb68f87cae1222eff7d87

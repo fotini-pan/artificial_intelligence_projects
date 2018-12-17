@@ -241,8 +241,9 @@ public class TaxiApp {
                 }
             }
         }
+        return -1;
     }
-
+/*
     public static void pathFinder(MapNode stopNode, MapNode curr) {
         System.out.println(curr.getX() + ", " + curr.getY());
         curr.setIsExplored(true);
@@ -250,8 +251,32 @@ public class TaxiApp {
             return;
         }
         ArrayList<MapNode> parents = curr.getParents();
+        System.out.println("Number of parents: " + parents.size());
         for (MapNode p: parents) {
-            if (p.getIsExplored) {
+            if (p.getIsExplored()) {
+                continue;
+            }
+            pathFinder(stopNode, p);
+        }
+    }
+*/
+
+    public static void pathFinder(MapNode stopNode, MapNode curr) {
+        System.out.print("Node: ");
+        System.out.print(curr.getX() + ", " + curr.getY());
+        System.out.println(" has " + curr.getParents().size() + " parents.");
+        curr.setIsExplored(true);
+        if (curr == stopNode) {
+            return;
+        }
+        ArrayList<MapNode> parents = curr.getParents();
+        System.out.print("They are: ");
+        for (MapNode p: parents) {
+            System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
+        }
+        System.out.println();
+        for (MapNode p: parents) {
+            if (p.getIsExplored()) {
                 continue;
             }
             pathFinder(stopNode, p);
@@ -269,7 +294,10 @@ public class TaxiApp {
         MapNode goal = client.getMapNodeOfClient(map);
         MapNode start = taxis.get(0).getMapNodeOfTaxi(map);
         double cost = aStarSearch(start, goal);
-        /*MapNode m = goal; 
+        //System.out.println(start.getParents().size());
+        pathFinder(start, goal);
+        /*
+        MapNode m = goal; 
         int count = 0;
         while(true){
             count = count + 1;
@@ -280,7 +308,8 @@ public class TaxiApp {
                 break;
             }
         }
-        System.out.println(count);  */
+        System.out.println(count);
+        */
     }
     
 }
