@@ -14,9 +14,6 @@ public class TaxiApp {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<Node> nodes = new ArrayList<>();
     private static HashMap<String, MapNode> map = new HashMap<>();
-    private static ArrayList<MapNode> open = new ArrayList<>();
-    private static ArrayList<MapNode> closed = new ArrayList<>();
-    //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
     
     /*
         The 3 below methods are used to read the input data.
@@ -192,7 +189,7 @@ public class TaxiApp {
         This method is used to sort the open list.
     */
 
-    public static void sortOpenList(){
+    public static void sortList(ArrayList<MapNode> open){
         Collections.sort(open, new Comparator<MapNode>(){
 
             @Override
@@ -216,9 +213,12 @@ public class TaxiApp {
     */
 
     public static double aStarSearch(MapNode S, MapNode G){
+        ArrayList<MapNode> open = new ArrayList<>();
+        ArrayList<MapNode> closed = new ArrayList<>();
+        //private static PriorityQueue<MapNode> open = new PriorityQueue<>(1, new MapNodeComparator());
         open.add(S);
         while (!open.isEmpty()) {
-            sortOpenList();
+            sortList(open);
             MapNode current = open.remove(0);
             if (current == G) {
                 return current.getG();
@@ -244,7 +244,7 @@ public class TaxiApp {
                     m.setG(newG);
                     m.clearAndAddParent(current);
                 }
-                else if (oldG == newG) {
+                else if (oldG*1.000000001 < newG) {
                     m.addParent(current);
                 }
                 if (!open.contains(m) && !closed.contains(m)) {
@@ -252,8 +252,6 @@ public class TaxiApp {
                 }
             }
         }
-        open.clear();
-        closed.clear();
         return -1;
     }
 
@@ -301,6 +299,7 @@ public class TaxiApp {
         Taxi minTaxi = taxis.get(0);
         ArrayList<ArrayList<MapNode>> p = pathFinder(start, goal);
         taxis.get(0).setPathToClient(p);
+        clearAllParents();
         for(int i = 1; i < taxis.size(); i++){
             start = taxis.get(i).getMapNodeOfTaxi(map);
             double cost = aStarSearch(start, goal);
@@ -322,22 +321,18 @@ public class TaxiApp {
         findNodeOfClient();
         findNodeOfTaxi();
         makeHeuristicValues();
-        /*findAllPaths();
-
-        System.out.print("CLIENT : ");
-        System.out.println(clients.get(0).getX() + ", " + clients.get(0).getY());
-        System.out.println("========================================");
-
-        for(Taxi taxi : taxis){
-            System.out.println("TAXI : " + taxi.getTaxiNode().getX() + ", " + taxi.getTaxiNode().getY());
-            for(ArrayList<MapNode> arr : taxi.getPathToClient()){
-                for(MapNode m : arr){
-                    System.out.println(m.getX() + ", " + m.getY());
-                }
-                System.out.println(".................................................");
-            }
-        }*/
-        MapNode m = map.get("23.757984237.9626349");
-        System.out.println(m.getX() + ", " + m.getY());
+        
+        Client client = clients.get(0);
+        MapNode goal = client.getMapNodeOfClient(map);
+        
+        for (Taxi taxi: taxis) {
+            MapNode start = taxi.getMapNodeOfTaxi(map);
+            double cost = aStarSearch(start, goal);
+            clearAllParents();
+            System.out.print(taxi.getId() + " ==> ");
+            System.out.println(cost);
+        }
+        Taxi minTaxi = findAllPaths();
+        System.out.println(minTaxi.getId());
     }
 }
