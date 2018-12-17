@@ -6,7 +6,6 @@ public class MapNode {
     private double y;
     private double h;
     private double g;
-    private boolean isExplored;
     private ArrayList<Node> refNodes;
     private ArrayList<MapNode> canGoNodes;
     private ArrayList<MapNode> parents;
@@ -16,7 +15,6 @@ public class MapNode {
         this.y = y;
         this.g = 0;
         this.h = 0;
-        this.isExplored = false;
         this.refNodes = new ArrayList<>();
         this.canGoNodes = new ArrayList<>();
         this.parents = new ArrayList<>();
@@ -27,7 +25,6 @@ public class MapNode {
         this.y = Double.parseDouble(arr.get(1));
         this.g = 0;
         this.h = 0;
-        this.isExplored = false;
         this.refNodes = new ArrayList<>();
         this.canGoNodes = new ArrayList<>();
         this.parents = new ArrayList<>();
@@ -65,6 +62,10 @@ public class MapNode {
         this.parents.add(m);
     }
 
+    public void clearParents(){
+        this.parents.clear();
+    }
+
     public void clearAndAddParent(MapNode m){
         this.parents.clear();
         this.parents.add(m);
@@ -74,6 +75,16 @@ public class MapNode {
         Node n = null;
         for(Node node : this.refNodes){
             if(node.getId()==id){
+                n = node;
+            }
+        }
+        return n;
+    }
+
+    public Node getRefNodeByXY(double x, double y){
+        Node n = null;
+        for(Node node : this.refNodes){
+            if(node.getX()==x && node.getY()==y){
                 n = node;
             }
         }
@@ -99,14 +110,6 @@ public class MapNode {
     public double getF(){
         return (this.g + this.h);
     }
-
-    public void setIsExplored(boolean isExplored){
-        this.isExplored = isExplored;
-    }
-
-    public boolean getIsExplored(){
-        return this.isExplored;
-    }
 }
 
 /*class MapNodeComparator implements Comparator<MapNode>{ 
@@ -119,4 +122,5 @@ public class MapNode {
         } 
         return 0; 
         } 
-} */
+} 
+*/
